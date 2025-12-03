@@ -105,6 +105,11 @@ export const calculateMoonRashi = async (details: BirthDetails): Promise<string>
       }
     });
     
+    // Strict null check for response.text
+    if (!response.text) {
+        throw new Error("API response was empty.");
+    }
+
     const jsonText = response.text.trim();
     const parsedData = JSON.parse(jsonText);
     
@@ -203,6 +208,11 @@ ${braceletData}
                 responseSchema: insightsSchema,
             }
         });
+
+        // Strict null check for response.text
+        if (!response.text) {
+             throw new Error("API response was empty.");
+        }
 
         const jsonText = response.text.trim();
         const parsedData = JSON.parse(jsonText);
