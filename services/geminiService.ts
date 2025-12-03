@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import type { BirthDetails, RashiInsights } from '../types';
 
@@ -68,6 +69,24 @@ const calculateSiderealLongitude = (utcDate: Date): number => {
     return siderealLongitude;
 };
 
+// Helper to handle API errors specifically
+const handleApiError = (error: any, defaultMsg: string) => {
+    console.error("Gemini API Error:", error);
+    
+    // Convert error to string to check for 429 or quota messages
+    const errString = error.toString().toLowerCase();
+    
+    if (errString.includes("429") || errString.includes("exhausted") || errString.includes("quota")) {
+        throw new Error("High traffic! The cosmic channels are busy. Please wait 1 minute and try again.");
+    }
+    
+    if (error instanceof Error && error.message.includes("400")) {
+         throw new Error("Could not understand the location. Please check the City/Country spelling.");
+    }
+
+    throw new Error(defaultMsg);
+};
+
 
 /**
  * Calculates Moon Rashi using a hybrid approach:
@@ -131,11 +150,8 @@ export const calculateMoonRashi = async (details: BirthDetails): Promise<string>
     return moonRashi;
 
   } catch (error) {
-    console.error("Error in the Moon Rashi calculation process:", error);
-    if (error instanceof Error && error.message.includes("400")) {
-        return "Could not find the location specified. Please be more specific (e.g., City, State, Country).";
-    }
-    throw new Error("Failed to determine the Moon Rashi. The cosmic energies are unclear.");
+    handleApiError(error, "Failed to determine the Moon Rashi. Please check your details.");
+    return ""; // Should not be reached due to throw
   }
 };
 
@@ -224,7 +240,7 @@ ${braceletData}
         return parsedData;
 
     } catch (error) {
-        console.error("Error fetching insights:", error);
-        throw new Error("Failed to channel insights from the cosmos.");
+        handleApiError(error, "Failed to channel insights from the cosmos.");
+        throw error; // keep typescript happy
     }
 };
