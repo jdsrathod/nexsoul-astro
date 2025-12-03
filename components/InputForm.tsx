@@ -184,7 +184,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                 </div>
 
                  <div>
-                    <label htmlFor="city" className="block text-sm font-medium text-yellow-200 text-left">City</label>
+                    <label htmlFor="city" className="block text-sm font-medium text-yellow-200 text-left">Place of Birth</label>
                     <input
                         type="text"
                         name="city_input_nexsoul"
@@ -192,7 +192,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         required
-                        placeholder="e.g., Mumbai"
+                        placeholder="e.g., Mumbai (or nearest city)"
                         autoComplete="off"
                         className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
                     />
