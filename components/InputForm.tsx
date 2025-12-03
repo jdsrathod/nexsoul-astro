@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import type { BirthDetails } from '../types';
 
@@ -192,7 +193,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         required
-                        placeholder="e.g., Mumbai (or nearest city)"
+                        placeholder="e.g., Village/City, District"
                         autoComplete="off"
                         className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
                     />
