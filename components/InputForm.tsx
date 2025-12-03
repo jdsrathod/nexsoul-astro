@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import type { BirthDetails } from '../types';
 
@@ -7,46 +8,169 @@ interface InputFormProps {
 }
 
 const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
-    const [date, setDate] = useState('2000-01-01');
-    const [time, setTime] = useState('01:00:00');
-    const [city, setCity] = useState('Gandhinagar');
-    const [state, setState] = useState('Gujarat');
-    const [country, setCountry] = useState('India');
+    // Date State
+    const [day, setDay] = useState('');
+    const [month, setMonth] = useState('');
+    const [year, setYear] = useState('');
+    
+    // Time State (Split for 12h format)
+    const [hour, setHour] = useState('');
+    const [minute, setMinute] = useState('');
+    const [second, setSecond] = useState('00'); // Default seconds to 00 if skipped
+    const [ampm, setAmPm] = useState('PM'); // Default to PM
 
+    // Location State
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [country, setCountry] = useState('');
+
+    const handleMonthChange = (val: string) => {
+        const cleanVal = val.replace(/\D/g, '');
+        // Strict check: Cannot be > 12
+        if (cleanVal && parseInt(cleanVal) > 12) return;
+        setMonth(cleanVal);
+    };
+
+    const handleDayChange = (val: string) => {
+        const cleanVal = val.replace(/\D/g, '');
+        // Strict check: Cannot be > 31
+        if (cleanVal && parseInt(cleanVal) > 31) return;
+        setDay(cleanVal);
+    };
+
+    const handleHourChange = (val: string) => {
+        const cleanVal = val.replace(/\D/g, '');
+        // Hour in 12h format cannot be > 12
+        if (cleanVal && parseInt(cleanVal) > 12) return;
+        setHour(cleanVal);
+    };
+
+    const handleMinuteSecondChange = (val: string, setter: (v: string) => void) => {
+        const cleanVal = val.replace(/\D/g, '');
+        // Minutes/Seconds cannot be > 59
+        if (cleanVal && parseInt(cleanVal) > 59) return;
+        setter(cleanVal);
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (date && time && city && state && country) {
-            onSubmit({ date, time, city, state, country });
+        
+        if (day && month && year && hour && minute && city && state && country) {
+            // 1. Construct Date: YYYY-MM-DD
+            const paddedDay = day.padStart(2, '0');
+            const paddedMonth = month.padStart(2, '0');
+            const fullDate = `${year}-${paddedMonth}-${paddedDay}`;
+            
+            // 2. Construct Time: Convert 12h (HR:MN:SE AM/PM) to 24h (HH:MM:SS) for the API
+            let hourInt = parseInt(hour);
+            const minInt = parseInt(minute);
+            const secInt = second ? parseInt(second) : 0;
+
+            // Conversion logic
+            if (ampm === 'PM' && hourInt < 12) hourInt += 12;
+            if (ampm === 'AM' && hourInt === 12) hourInt = 0;
+
+            const finalTime = `${hourInt.toString().padStart(2, '0')}:${minInt.toString().padStart(2, '0')}:${secInt.toString().padStart(2, '0')}`;
+            
+            onSubmit({ date: fullDate, time: finalTime, city, state, country });
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
+        <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6" autoComplete="off">
             <div className="space-y-4">
+                {/* Date Input */}
                 <div>
-                    <label htmlFor="date" className="block text-sm font-medium text-yellow-200 text-left">Date of Birth</label>
-                    <input
-                        type="date"
-                        id="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        required
-                        className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
-                    />
+                    <label className="block text-sm font-medium text-yellow-200 text-left mb-1">
+                        Date of Birth <span className="text-yellow-200/50 text-xs ml-1">(DD / MM / YYYY)</span>
+                    </label>
+                    <div className="flex space-x-2">
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="DD"
+                            maxLength={2}
+                            value={day}
+                            onChange={(e) => handleDayChange(e.target.value)}
+                            required
+                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
+                        />
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="MM"
+                            maxLength={2}
+                            value={month}
+                            onChange={(e) => handleMonthChange(e.target.value)}
+                            required
+                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
+                        />
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="YYYY"
+                            maxLength={4}
+                            value={year}
+                            onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))}
+                            required
+                            className="w-1/2 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
+                        />
+                    </div>
                 </div>
+
+                {/* Time Input (Split HR:MN:SE AM/PM) */}
                 <div>
-                    <label htmlFor="time" className="block text-sm font-medium text-yellow-200 text-left">Time of Birth</label>
-                    <input
-                        type="time"
-                        id="time"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        required
-                        step="1"
-                        className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
-                    />
+                    <label className="block text-sm font-medium text-yellow-200 text-left mb-1">
+                        Time of Birth <span className="text-yellow-200/50 text-xs ml-1">(HR : MN : SE)</span>
+                    </label>
+                    <div className="flex space-x-2">
+                        {/* Hour */}
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="HR"
+                            maxLength={2}
+                            value={hour}
+                            onChange={(e) => handleHourChange(e.target.value)}
+                            required
+                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
+                        />
+                        <span className="text-yellow-400 self-center text-lg font-bold">:</span>
+                        {/* Minute */}
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="MN"
+                            maxLength={2}
+                            value={minute}
+                            onChange={(e) => handleMinuteSecondChange(e.target.value, setMinute)}
+                            required
+                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
+                        />
+                        <span className="text-yellow-400 self-center text-lg font-bold">:</span>
+                        {/* Second */}
+                         <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="SE"
+                            maxLength={2}
+                            value={second}
+                            onChange={(e) => handleMinuteSecondChange(e.target.value, setSecond)}
+                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
+                        />
+                        {/* AM/PM Selector */}
+                        <select
+                            value={ampm}
+                            onChange={(e) => setAmPm(e.target.value)}
+                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 text-center appearance-none"
+                            style={{ textAlignLast: 'center' }}
+                        >
+                            <option value="AM" className="bg-neutral-900 text-white">AM</option>
+                            <option value="PM" className="bg-neutral-900 text-white">PM</option>
+                        </select>
+                    </div>
                 </div>
+
                  <div>
                     <label htmlFor="city" className="block text-sm font-medium text-yellow-200 text-left">City</label>
                     <input
@@ -55,7 +179,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         required
-                        placeholder="e.g., Gandhinagar"
+                        placeholder="e.g., Mumbai"
                         className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
                     />
                 </div>
@@ -67,7 +191,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                         value={state}
                         onChange={(e) => setState(e.target.value)}
                         required
-                        placeholder="e.g., Gujarat"
+                        placeholder="e.g., Maharashtra"
                         className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
                     />
                 </div>
