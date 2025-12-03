@@ -7,6 +7,16 @@ interface InputFormProps {
     isLoading: boolean;
 }
 
+const indianStates = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
+    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
+    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
+    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
+    "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", 
+    "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", 
+    "Lakshadweep", "Puducherry", "Other / Outside India"
+];
+
 const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
     // Date State
     const [day, setDay] = useState('');
@@ -200,17 +210,21 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                 </div>
                  <div>
                     <label htmlFor="state" className="block text-sm font-medium text-yellow-200 text-left">State/Province</label>
-                    <input
-                        type="text"
+                    <select
                         name="state_input_nexsoul"
                         id="state"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
                         required
-                        placeholder="e.g., Maharashtra"
-                        autoComplete="off"
-                        className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
-                    />
+                        className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 appearance-none"
+                    >
+                        <option value="" disabled className="bg-neutral-900 text-gray-400">Select State</option>
+                        {indianStates.map((st) => (
+                            <option key={st} value={st} className="bg-neutral-900 text-white">
+                                {st}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                  <div>
                     <label htmlFor="country" className="block text-sm font-medium text-yellow-200 text-left">Country</label>

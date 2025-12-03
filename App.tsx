@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import InputForm from './components/InputForm';
 import RecommendationResult from './components/RecommendationResult';
@@ -53,25 +52,30 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
-            {/* Starfield Background */}
+        <div className="min-h-screen w-full bg-[#050505] text-white flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+            {/* Background Gradient & Noise */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0a0500] to-black z-0"></div>
+            
+            {/* Seamless Starfield Background */}
             <div id="stars"></div>
             <div id="stars2"></div>
             <div id="stars3"></div>
 
             <main className="w-full max-w-4xl mx-auto flex flex-col items-center text-center z-10">
                 <header className="mb-10 flex flex-col items-center">
-                     <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300">
+                     <h1 className="text-5xl md:text-6xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200 drop-shadow-md">
                         Nexsoul Astro
                     </h1>
-                    <p className="mt-4 text-lg text-yellow-200/80">
+                    <p className="mt-4 text-lg text-yellow-100/80 font-light tracking-wide">
                        Unlock your cosmic blueprint with personalized Vedic guidance.
                     </p>
                 </header>
 
                 <div className="w-full flex items-center justify-center min-h-[350px]">
                     {!insights && !isLoading && !error && (
-                         <div className="w-full max-w-lg p-8 bg-black/20 backdrop-blur-md rounded-2xl border border-yellow-500/20 shadow-lg animate-fade-in">
+                         <div className="w-full max-w-lg p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl animate-fade-in relative">
+                            {/* Subtle glow behind the card */}
+                            <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/10 to-transparent blur-xl opacity-50 -z-10 rounded-2xl"></div>
                             <InputForm onSubmit={handleSubmit} isLoading={isLoading} />
                          </div>
                     )}
@@ -79,12 +83,12 @@ const App: React.FC = () => {
                     {isLoading && <CosmicLoader message={loaderMessage} />}
                     
                     {error && (
-                        <div className="text-center p-8 bg-red-900/30 border border-red-500 rounded-lg animate-fade-in max-w-lg">
+                        <div className="text-center p-8 bg-red-900/20 border border-red-500/50 rounded-lg animate-fade-in max-w-lg backdrop-blur-sm">
                             <p className="text-xl font-semibold text-red-300">A Cosmic Disturbance Occurred</p>
                             <p className="mt-2 text-red-200">{error}</p>
                             <button 
                                 onClick={handleReset}
-                                className="mt-6 py-2 px-5 bg-yellow-600 hover:bg-yellow-700 rounded-md font-semibold transition-colors text-black"
+                                className="mt-6 py-2 px-5 bg-yellow-600 hover:bg-yellow-700 rounded-md font-semibold transition-colors text-black shadow-lg"
                             >
                                 Try Again
                             </button>
@@ -96,9 +100,9 @@ const App: React.FC = () => {
                     )}
                 </div>
 
-                <footer className="mt-12 text-sm text-yellow-400/50 flex flex-col items-center gap-1">
+                <footer className="mt-12 text-sm text-yellow-500/40 flex flex-col items-center gap-1">
                     <p>&copy; {new Date().getFullYear()} Nexsoul Astro. For spiritual guidance only.</p>
-                    <p className="text-xs opacity-50">v1.8.1</p>
+                    <p className="text-xs opacity-50">v1.8.2</p>
                 </footer>
             </main>
             <style>{`
@@ -112,11 +116,15 @@ const App: React.FC = () => {
                 .animate-fade-in-delay-1 { animation-delay: 200ms; }
                 .animate-fade-in-delay-2 { animation-delay: 400ms; }
                 
-                /* Starfield background */
-                @keyframes move-twink-back {
+                /* 
+                   Seamless Starfield Animation 
+                   Using square SVG tiles to eliminate the "glitch line" seam.
+                */
+                @keyframes move-stars {
                     from {background-position:0 0;}
-                    to {background-position:-10000px 5000px;}
+                    to {background-position:-2000px 1000px;}
                 }
+                
                 #stars, #stars2, #stars3 {
                     position: absolute;
                     top: 0;
@@ -129,17 +137,26 @@ const App: React.FC = () => {
                     background: transparent;
                     z-index: 0;
                 }
+
+                /* Layer 1: Small stars (Slow) */
                 #stars {
-                    background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjEwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48Y2lyY2xlIGZpbGw9IiNGRkYiIGN4PSIyIiBjeT0iMiIgcj0iMC41Ii8+PGNpcmNsZSBmaWxsPSIjRkZGIiBjeD0iOTAiIGN5PSI1IiByPSIwLjUiLz48L3N2Zz4=');
-                    animation: move-twink-back 200s linear infinite;
+                    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIxIiBmaWxsPSIjRkZGIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxNTAigcj0iMSIgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMTgwIiBjeT0iNDAigcj0iMSIgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxMDAigcj0iMSIgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iMC41Ii8+PC9zdmc+');
+                    animation: move-stars 150s linear infinite;
+                    background-size: 200px 200px;
                 }
+
+                /* Layer 2: Medium stars (Medium Speed) */
                 #stars2 {
-                    background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjEwMHB4IiBoZWlnaHQ9IjEwMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwIDEwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGNpcmNsZSBmaWxsPSIjRkZGIiBjeD0iMjAiIGN5PSI1MCIgcj0iMC44Ii8+PGNpcmNsZSBmaWxsPSIjRkZGIiBjeD0iODAiIGN5PSI5MCIgcj0iMC44Ii8+PC9zdmc+');
-                    animation: move-twink-back 150s linear infinite;
+                    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxLjUiIGZpbGw9IiNGRkYiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjI1MCIgcj0iMS41IiBmaWxsPSIjRkZGIiBvcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSIyODAiIGN5PSI4MCIgcj0iMS41IiBmaWxsPSIjRkZGIiBvcGFjaXR5PSIwLjYiLz48L3N2Zz4=');
+                    animation: move-stars 100s linear infinite;
+                    background-size: 300px 300px;
                 }
+
+                /* Layer 3: Large stars (Fast, Closer) */
                 #stars3 {
-                   background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjEwMHB4IiBoZWlnaHQ9IjEwMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwIDEwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGNpcmNsZSBmaWxsPSIjRkZGIiBjeD0iNDAiIGN5PSIzMCIgcj0iMS4yIi8+PGNpcmNsZSBmaWxsPSIjRkZGIiBjeD0iNjAiIGN5PSI3NSIgcj0iMS4yIi8+PC9zdmc+');
-                   animation: move-twink-back 100s linear infinite;
+                   background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAigcj0iMiIgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iNDAwIiBjeT0iNDAwIiByPSIyIiBmaWxsPSIjRkZGIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=');
+                   animation: move-stars 70s linear infinite;
+                   background-size: 500px 500px;
                 }
 
                 /* Cosmic Loader Animations */
