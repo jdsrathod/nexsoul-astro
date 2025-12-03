@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import type { BirthDetails } from '../types';
 
@@ -77,7 +76,8 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6" autoComplete="off">
+        // autoComplete="new-password" is a hack to prevent Chrome/Edge from autofilling address data from previous sessions
+        <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6" autoComplete="new-password">
             <div className="space-y-4">
                 {/* Date Input */}
                 <div>
@@ -86,6 +86,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                     </label>
                     <div className="flex space-x-2">
                         <input
+                            name="day_input_nexsoul"
                             type="text"
                             inputMode="numeric"
                             placeholder="DD"
@@ -93,9 +94,11 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                             value={day}
                             onChange={(e) => handleDayChange(e.target.value)}
                             required
+                            autoComplete="off"
                             className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
                         />
                         <input
+                            name="month_input_nexsoul"
                             type="text"
                             inputMode="numeric"
                             placeholder="MM"
@@ -103,9 +106,11 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                             value={month}
                             onChange={(e) => handleMonthChange(e.target.value)}
                             required
+                            autoComplete="off"
                             className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
                         />
                         <input
+                            name="year_input_nexsoul"
                             type="text"
                             inputMode="numeric"
                             placeholder="YYYY"
@@ -113,6 +118,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                             value={year}
                             onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))}
                             required
+                            autoComplete="off"
                             className="w-1/2 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
                         />
                     </div>
@@ -126,6 +132,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                     <div className="flex space-x-2">
                         {/* Hour */}
                         <input
+                            name="hour_input_nexsoul"
                             type="text"
                             inputMode="numeric"
                             placeholder="HR"
@@ -133,11 +140,13 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                             value={hour}
                             onChange={(e) => handleHourChange(e.target.value)}
                             required
+                            autoComplete="off"
                             className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
                         />
                         <span className="text-yellow-400 self-center text-lg font-bold">:</span>
                         {/* Minute */}
                         <input
+                            name="minute_input_nexsoul"
                             type="text"
                             inputMode="numeric"
                             placeholder="MN"
@@ -145,17 +154,20 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                             value={minute}
                             onChange={(e) => handleMinuteSecondChange(e.target.value, setMinute)}
                             required
+                            autoComplete="off"
                             className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
                         />
                         <span className="text-yellow-400 self-center text-lg font-bold">:</span>
                         {/* Second */}
                          <input
+                            name="second_input_nexsoul"
                             type="text"
                             inputMode="numeric"
                             placeholder="SE"
                             maxLength={2}
                             value={second}
                             onChange={(e) => handleMinuteSecondChange(e.target.value, setSecond)}
+                            autoComplete="off"
                             className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
                         />
                         {/* AM/PM Selector */}
@@ -175,11 +187,13 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                     <label htmlFor="city" className="block text-sm font-medium text-yellow-200 text-left">City</label>
                     <input
                         type="text"
+                        name="city_input_nexsoul"
                         id="city"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         required
                         placeholder="e.g., Mumbai"
+                        autoComplete="off"
                         className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
                     />
                 </div>
@@ -187,11 +201,13 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                     <label htmlFor="state" className="block text-sm font-medium text-yellow-200 text-left">State/Province</label>
                     <input
                         type="text"
+                        name="state_input_nexsoul"
                         id="state"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
                         required
                         placeholder="e.g., Maharashtra"
+                        autoComplete="off"
                         className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
                     />
                 </div>
@@ -199,11 +215,13 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                     <label htmlFor="country" className="block text-sm font-medium text-yellow-200 text-left">Country</label>
                     <input
                         type="text"
+                        name="country_input_nexsoul"
                         id="country"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
                         required
                         placeholder="e.g., India"
+                        autoComplete="off"
                         className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
                     />
                 </div>
