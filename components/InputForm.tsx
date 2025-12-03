@@ -80,8 +80,8 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
     };
 
     // HIGH CONTRAST PREMIUM INPUT STYLES
-    // Using very dark grey background (not transparent) for maximum text legibility
-    const inputClasses = "w-full bg-[#151515] border border-amber-500/20 rounded-md p-4 text-amber-50 placeholder-neutral-600 focus:ring-1 focus:ring-amber-500/50 focus:border-amber-400 focus:bg-[#1a1a1a] transition-all outline-none text-center font-medium tracking-wide shadow-inner";
+    // Modified padding: py-4 remains for height, but px-1 on mobile ensures "HR"/"MN" fits, increasing to px-4 on desktop
+    const inputClasses = "w-full bg-[#151515] border border-amber-500/20 rounded-md py-4 px-1 md:px-4 text-amber-50 placeholder-neutral-600 focus:ring-1 focus:ring-amber-500/50 focus:border-amber-400 focus:bg-[#1a1a1a] transition-all outline-none text-center font-medium tracking-wide shadow-inner";
     
     // ELEGANT LABELS
     const labelClasses = "block text-[11px] font-bold text-amber-500/90 uppercase tracking-[0.15em] mb-2.5 ml-1 font-sans";
@@ -107,14 +107,14 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
                     <label className={labelClasses}>
                         Time of Birth <span className="text-neutral-500 ml-2 normal-case tracking-normal font-light opacity-70">(12 Hour Format)</span>
                     </label>
-                    <div className="flex gap-3 items-center">
-                        <input name="hour_input" type="text" inputMode="numeric" placeholder="HR" maxLength={2} value={hour} onChange={(e) => handleHourChange(e.target.value)} required autoComplete="off" className={`${inputClasses} text-lg`} />
+                    <div className="flex gap-2 md:gap-3 items-center">
+                        <input name="hour_input" type="text" inputMode="numeric" placeholder="HR" maxLength={2} value={hour} onChange={(e) => handleHourChange(e.target.value)} required autoComplete="off" className={`${inputClasses} text-lg flex-1`} />
                         <span className="text-amber-500/60 text-xl font-light pb-1">:</span>
-                        <input name="minute_input" type="text" inputMode="numeric" placeholder="MN" maxLength={2} value={minute} onChange={(e) => handleMinuteSecondChange(e.target.value, setMinute)} required autoComplete="off" className={`${inputClasses} text-lg`} />
+                        <input name="minute_input" type="text" inputMode="numeric" placeholder="MN" maxLength={2} value={minute} onChange={(e) => handleMinuteSecondChange(e.target.value, setMinute)} required autoComplete="off" className={`${inputClasses} text-lg flex-1`} />
                         <span className="text-amber-500/60 text-xl font-light pb-1">:</span>
-                        <input name="second_input" type="text" inputMode="numeric" placeholder="SE" maxLength={2} value={second} onChange={(e) => handleMinuteSecondChange(e.target.value, setSecond)} autoComplete="off" className={`${inputClasses} text-lg`} />
-                        <div className="w-2"></div>
-                        <select value={ampm} onChange={(e) => setAmPm(e.target.value)} className={`${inputClasses} appearance-none cursor-pointer bg-[#151515] text-amber-400 font-bold border-amber-500/30 hover:border-amber-400`}>
+                        <input name="second_input" type="text" inputMode="numeric" placeholder="SE" maxLength={2} value={second} onChange={(e) => handleMinuteSecondChange(e.target.value, setSecond)} autoComplete="off" className={`${inputClasses} text-lg flex-1`} />
+                        <div className="w-1 md:w-2"></div>
+                        <select value={ampm} onChange={(e) => setAmPm(e.target.value)} className={`${inputClasses} appearance-none cursor-pointer bg-[#151515] text-amber-400 font-bold border-amber-500/30 hover:border-amber-400 flex-1 px-0 md:px-4`}>
                             <option value="AM">AM</option>
                             <option value="PM">PM</option>
                         </select>

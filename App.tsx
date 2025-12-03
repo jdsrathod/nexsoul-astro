@@ -116,7 +116,7 @@ const App: React.FC = () => {
 
                 <footer className="mt-16 text-sm text-gray-600 flex flex-col items-center gap-2">
                     <p className="font-light tracking-widest uppercase text-[10px]">&copy; Nexsoul&reg; All Rights Reserved</p>
-                    <p className="text-[10px] opacity-40 font-mono">v2.0.1</p>
+                    <p className="text-[10px] opacity-40 font-mono">v2.0.2</p>
                 </footer>
             </main>
             <style>{`

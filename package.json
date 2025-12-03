@@ -1,7 +1,8 @@
+
 {
   "name": "nexsoul-astro",
   "private": true,
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "description": "Spiritual intelligence app for Nexsoul® that calculates Vedic Moon Rashi and recommends personalized crystal bracelets using Gemini AI.",
   "scripts": {
