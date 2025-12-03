@@ -36,28 +36,24 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
 
     const handleMonthChange = (val: string) => {
         const cleanVal = val.replace(/\D/g, '');
-        // Strict check: Cannot be > 12
         if (cleanVal && parseInt(cleanVal) > 12) return;
         setMonth(cleanVal);
     };
 
     const handleDayChange = (val: string) => {
         const cleanVal = val.replace(/\D/g, '');
-        // Strict check: Cannot be > 31
         if (cleanVal && parseInt(cleanVal) > 31) return;
         setDay(cleanVal);
     };
 
     const handleHourChange = (val: string) => {
         const cleanVal = val.replace(/\D/g, '');
-        // Hour in 12h format cannot be > 12
         if (cleanVal && parseInt(cleanVal) > 12) return;
         setHour(cleanVal);
     };
 
     const handleMinuteSecondChange = (val: string, setter: (v: string) => void) => {
         const cleanVal = val.replace(/\D/g, '');
-        // Minutes/Seconds cannot be > 59
         if (cleanVal && parseInt(cleanVal) > 59) return;
         setter(cleanVal);
     };
@@ -66,17 +62,14 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
         e.preventDefault();
         
         if (day && month && year && hour && minute && city && state && country) {
-            // 1. Construct Date: YYYY-MM-DD
             const paddedDay = day.padStart(2, '0');
             const paddedMonth = month.padStart(2, '0');
             const fullDate = `${year}-${paddedMonth}-${paddedDay}`;
             
-            // 2. Construct Time: Convert 12h (HR:MN:SE AM/PM) to 24h (HH:MM:SS) for the API
             let hourInt = parseInt(hour);
             const minInt = parseInt(minute);
             const secInt = second ? parseInt(second) : 0;
 
-            // Conversion logic
             if (ampm === 'PM' && hourInt < 12) hourInt += 12;
             if (ampm === 'AM' && hourInt === 12) hourInt = 0;
 
@@ -86,168 +79,89 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
         }
     };
 
+    // HIGH CONTRAST PREMIUM INPUT STYLES
+    // Using very dark grey background (not transparent) for maximum text legibility
+    const inputClasses = "w-full bg-[#151515] border border-amber-500/20 rounded-md p-4 text-amber-50 placeholder-neutral-600 focus:ring-1 focus:ring-amber-500/50 focus:border-amber-400 focus:bg-[#1a1a1a] transition-all outline-none text-center font-medium tracking-wide shadow-inner";
+    
+    // ELEGANT LABELS
+    const labelClasses = "block text-[11px] font-bold text-amber-500/90 uppercase tracking-[0.15em] mb-2.5 ml-1 font-sans";
+
     return (
-        // autoComplete="new-password" is a hack to prevent Chrome/Edge from autofilling address data from previous sessions
-        <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6" autoComplete="new-password">
-            <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="w-full space-y-8" autoComplete="new-password">
+            <div className="space-y-6">
+                
                 {/* Date Input */}
-                <div>
-                    <label className="block text-sm font-medium text-yellow-200 text-left mb-1">
-                        Date of Birth <span className="text-yellow-200/50 text-xs ml-1">(DD / MM / YYYY)</span>
+                <div className="animate-fade-in animate-fade-in-delay-1">
+                    <label className={labelClasses}>
+                        Date of Birth <span className="text-neutral-500 ml-2 normal-case tracking-normal font-light opacity-70">(DD / MM / YYYY)</span>
                     </label>
-                    <div className="flex space-x-2">
-                        <input
-                            name="day_input_nexsoul"
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="DD"
-                            maxLength={2}
-                            value={day}
-                            onChange={(e) => handleDayChange(e.target.value)}
-                            required
-                            autoComplete="off"
-                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
-                        />
-                        <input
-                            name="month_input_nexsoul"
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="MM"
-                            maxLength={2}
-                            value={month}
-                            onChange={(e) => handleMonthChange(e.target.value)}
-                            required
-                            autoComplete="off"
-                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
-                        />
-                        <input
-                            name="year_input_nexsoul"
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="YYYY"
-                            maxLength={4}
-                            value={year}
-                            onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))}
-                            required
-                            autoComplete="off"
-                            className="w-1/2 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
-                        />
+                    <div className="flex gap-4">
+                        <input name="day_input" type="text" inputMode="numeric" placeholder="DD" maxLength={2} value={day} onChange={(e) => handleDayChange(e.target.value)} required autoComplete="off" className={`${inputClasses} flex-1 text-lg`} />
+                        <input name="month_input" type="text" inputMode="numeric" placeholder="MM" maxLength={2} value={month} onChange={(e) => handleMonthChange(e.target.value)} required autoComplete="off" className={`${inputClasses} flex-1 text-lg`} />
+                        <input name="year_input" type="text" inputMode="numeric" placeholder="YYYY" maxLength={4} value={year} onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))} required autoComplete="off" className={`${inputClasses} flex-[1.5] text-lg`} />
                     </div>
                 </div>
 
-                {/* Time Input (Split HR:MN:SE AM/PM) */}
-                <div>
-                    <label className="block text-sm font-medium text-yellow-200 text-left mb-1">
-                        Time of Birth <span className="text-yellow-200/50 text-xs ml-1">(HR : MN : SE)</span>
+                {/* Time Input */}
+                <div className="animate-fade-in animate-fade-in-delay-1">
+                    <label className={labelClasses}>
+                        Time of Birth <span className="text-neutral-500 ml-2 normal-case tracking-normal font-light opacity-70">(12 Hour Format)</span>
                     </label>
-                    <div className="flex space-x-2">
-                        {/* Hour */}
-                        <input
-                            name="hour_input_nexsoul"
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="HR"
-                            maxLength={2}
-                            value={hour}
-                            onChange={(e) => handleHourChange(e.target.value)}
-                            required
-                            autoComplete="off"
-                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
-                        />
-                        <span className="text-yellow-400 self-center text-lg font-bold">:</span>
-                        {/* Minute */}
-                        <input
-                            name="minute_input_nexsoul"
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="MN"
-                            maxLength={2}
-                            value={minute}
-                            onChange={(e) => handleMinuteSecondChange(e.target.value, setMinute)}
-                            required
-                            autoComplete="off"
-                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
-                        />
-                        <span className="text-yellow-400 self-center text-lg font-bold">:</span>
-                        {/* Second */}
-                         <input
-                            name="second_input_nexsoul"
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="SE"
-                            maxLength={2}
-                            value={second}
-                            onChange={(e) => handleMinuteSecondChange(e.target.value, setSecond)}
-                            autoComplete="off"
-                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 text-center"
-                        />
-                        {/* AM/PM Selector */}
-                        <select
-                            value={ampm}
-                            onChange={(e) => setAmPm(e.target.value)}
-                            className="w-1/4 bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 text-center appearance-none"
-                            style={{ textAlignLast: 'center' }}
-                        >
-                            <option value="AM" className="bg-neutral-900 text-white">AM</option>
-                            <option value="PM" className="bg-neutral-900 text-white">PM</option>
+                    <div className="flex gap-3 items-center">
+                        <input name="hour_input" type="text" inputMode="numeric" placeholder="HR" maxLength={2} value={hour} onChange={(e) => handleHourChange(e.target.value)} required autoComplete="off" className={`${inputClasses} text-lg`} />
+                        <span className="text-amber-500/60 text-xl font-light pb-1">:</span>
+                        <input name="minute_input" type="text" inputMode="numeric" placeholder="MN" maxLength={2} value={minute} onChange={(e) => handleMinuteSecondChange(e.target.value, setMinute)} required autoComplete="off" className={`${inputClasses} text-lg`} />
+                        <span className="text-amber-500/60 text-xl font-light pb-1">:</span>
+                        <input name="second_input" type="text" inputMode="numeric" placeholder="SE" maxLength={2} value={second} onChange={(e) => handleMinuteSecondChange(e.target.value, setSecond)} autoComplete="off" className={`${inputClasses} text-lg`} />
+                        <div className="w-2"></div>
+                        <select value={ampm} onChange={(e) => setAmPm(e.target.value)} className={`${inputClasses} appearance-none cursor-pointer bg-[#151515] text-amber-400 font-bold border-amber-500/30 hover:border-amber-400`}>
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
                         </select>
                     </div>
                 </div>
 
-                 <div>
-                    <label htmlFor="city" className="block text-sm font-medium text-yellow-200 text-left">Place of Birth</label>
-                    <input
-                        type="text"
-                        name="city_input_nexsoul"
-                        id="city"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        required
-                        placeholder="e.g., Village/City, District"
-                        autoComplete="off"
-                        className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
-                    />
-                </div>
-                 <div>
-                    <label htmlFor="state" className="block text-sm font-medium text-yellow-200 text-left">State/Province</label>
-                    <select
-                        name="state_input_nexsoul"
-                        id="state"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
-                        required
-                        className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400 appearance-none"
-                    >
-                        <option value="" disabled className="bg-neutral-900 text-gray-400">Select State</option>
-                        {indianStates.map((st) => (
-                            <option key={st} value={st} className="bg-neutral-900 text-white">
-                                {st}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                 <div>
-                    <label htmlFor="country" className="block text-sm font-medium text-yellow-200 text-left">Country</label>
-                    <input
-                        type="text"
-                        name="country_input_nexsoul"
-                        id="country"
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        required
-                        placeholder="e.g., India"
-                        autoComplete="off"
-                        className="mt-1 block w-full bg-white/10 text-white border-yellow-400/50 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm p-3 placeholder-gray-400"
-                    />
+                {/* Location Inputs */}
+                <div className="space-y-6 animate-fade-in animate-fade-in-delay-2">
+                    <div>
+                        <label htmlFor="city" className={labelClasses}>Place of Birth</label>
+                        <input type="text" id="city" value={city} onChange={(e) => setCity(e.target.value)} required placeholder="e.g., Village/City, District" autoComplete="off" className={`${inputClasses} text-left px-5 font-normal`} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label htmlFor="state" className={labelClasses}>State</label>
+                            <select id="state" value={state} onChange={(e) => setState(e.target.value)} required className={`${inputClasses} text-left px-4 appearance-none cursor-pointer text-gray-300 focus:text-white`}>
+                                <option value="" disabled className="text-gray-500">Select</option>
+                                {indianStates.map((st) => (
+                                    <option key={st} value={st} className="bg-neutral-900 text-white py-2">{st}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="country" className={labelClasses}>Country</label>
+                            <input type="text" id="country" value={country} onChange={(e) => setCountry(e.target.value)} required placeholder="e.g., India" autoComplete="off" className={`${inputClasses} text-left px-5`} />
+                        </div>
+                    </div>
                 </div>
             </div>
             
+            {/* METALLIC GOLD BUTTON */}
             <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:bg-yellow-400/80 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+                className="w-full py-4 bg-gradient-to-r from-[#b48811] via-[#fbd34d] to-[#b48811] text-black rounded-lg font-serif font-bold text-lg tracking-[0.1em] uppercase transition-all duration-300 shadow-[0_4px_25px_rgba(251,191,36,0.25)] hover:shadow-[0_6px_35px_rgba(251,191,36,0.4)] transform hover:-translate-y-0.5 hover:brightness-110 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-10 relative overflow-hidden group border border-amber-200/50"
             >
-                {isLoading ? 'Consulting the Stars...' : 'Find Your Rashi'}
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 skew-y-12"></div>
+                <span className="relative z-10 flex items-center justify-center gap-3">
+                    {isLoading ? (
+                        <>
+                            <span className="w-2.5 h-2.5 bg-black rounded-full animate-ping"></span>
+                            Aligning Stars...
+                        </>
+                    ) : (
+                        "Reveal My Rashi"
+                    )}
+                </span>
             </button>
         </form>
     );

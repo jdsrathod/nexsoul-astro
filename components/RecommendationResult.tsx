@@ -17,10 +17,15 @@ interface InfoCardProps {
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({ icon, title, children, className = '' }) => (
-    <div className={`bg-white/5 border border-yellow-500/20 rounded-xl p-6 backdrop-blur-sm w-full h-full transition-all duration-300 hover:border-yellow-500/40 hover:scale-[1.02] ${className}`}>
-        <div className="flex items-center mb-4">
-            {icon}
-            <h3 className="text-lg font-bold text-yellow-300 ml-3">{title}</h3>
+    <div className={`bg-[#080808] border border-amber-500/20 rounded-xl p-8 shadow-xl w-full h-full transition-all duration-300 hover:border-amber-500/40 relative overflow-hidden ${className}`}>
+        {/* Subtle accent line */}
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+        
+        <div className="flex items-center mb-6 border-b border-white/5 pb-4">
+            <div className="p-2 bg-amber-500/10 rounded-lg">
+                {icon}
+            </div>
+            <h3 className="text-xl font-bold text-amber-100 ml-4 font-serif tracking-wide">{title}</h3>
         </div>
         {children}
     </div>
@@ -80,15 +85,18 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ rashi, insi
     };
 
     return (
-        <div className="w-full max-w-2xl flex flex-col items-center space-y-6">
+        <div className="w-full max-w-3xl flex flex-col items-center space-y-8">
             {/* Main Rashi Card */}
-            <div className="w-full max-w-md bg-black/50 backdrop-blur-lg rounded-2xl border border-yellow-500/30 shadow-2xl shadow-yellow-900/50 text-white p-8 text-center opacity-0 animate-fade-in">
-                <div className="flex flex-col items-center justify-center">
-                    <MoonIcon className="w-16 h-16 mb-4 text-yellow-400" />
-                    <h2 className="text-xl font-semibold text-yellow-300 mb-2">
-                        Your Vedic Rashi is
+            <div className="w-full max-w-xl bg-gradient-to-br from-[#1a1a1a] to-black rounded-3xl border border-amber-500/40 shadow-2xl shadow-amber-900/20 text-white p-10 text-center opacity-0 animate-fade-in relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+                <div className="relative z-10 flex flex-col items-center justify-center">
+                    <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center mb-6 border border-amber-500/20 shadow-[0_0_30px_rgba(251,191,36,0.1)]">
+                         <MoonIcon className="w-10 h-10 text-amber-400" />
+                    </div>
+                    <h2 className="text-sm font-bold text-amber-500 uppercase tracking-[0.2em] mb-3">
+                        Your Vedic Moon Sign
                     </h2>
-                    <p className="text-4xl font-bold text-white font-serif tracking-wide">
+                    <p className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-amber-200 to-amber-500 font-serif pb-2">
                         {rashi}
                     </p>
                 </div>
@@ -96,22 +104,23 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ rashi, insi
             
             {/* Nexsoul Zodiac Bracelet Recommendation */}
             <div className="w-full opacity-0 animate-fade-in animate-fade-in-delay-1">
-                <InfoCard icon={<CrystalIcon className="w-7 h-7 text-yellow-400"/>} title="Your Nexsoul® Zodiac Bracelet">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <InfoCard icon={<GemIcon className="w-6 h-6 text-amber-400"/>} title="Your Nexsoul® Zodiac Bracelet">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                         {/* Left side: Info */}
                         <div className="text-center md:text-left">
-                            <h4 className="text-3xl font-serif text-white mb-3">{insights.recommendedBracelet.name}</h4>
-                            <p className="text-yellow-200/90">
-                                Crafted with crystals fully aligned with your Rashi's ruling planet and energy.
+                            <h4 className="text-3xl font-serif text-white mb-4 leading-tight">{insights.recommendedBracelet.name}</h4>
+                            <p className="text-neutral-400 leading-relaxed text-sm">
+                                Crafted with specific crystals that resonate with the frequency of {rashi}, amplifying your natural strengths.
                             </p>
                         </div>
                         {/* Right side: Crystals List */}
                         <div>
-                             <h5 className="font-semibold text-yellow-100 mb-3 text-center md:text-left">Key Crystals</h5>
+                             <h5 className="text-xs font-bold text-amber-500 uppercase tracking-wider mb-4 text-center md:text-left">Included Crystals</h5>
                              <ul className="space-y-3">
                                 {insights.recommendedBracelet.crystals.map(crystal => (
-                                    <li key={crystal} className="bg-yellow-900/20 p-3 rounded-lg border border-yellow-400/20 shadow-inner">
-                                        <span className="text-yellow-200 font-medium">
+                                    <li key={crystal} className="bg-[#151515] p-3 px-4 rounded-lg border border-white/5 flex items-center">
+                                        <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-3"></div>
+                                        <span className="text-neutral-200 font-medium">
                                             {crystal}
                                         </span>
                                     </li>
@@ -124,27 +133,33 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ rashi, insi
 
             {/* Cosmic Insights */}
             <div className="w-full opacity-0 animate-fade-in animate-fade-in-delay-2">
-                <InfoCard icon={<CosmicInsightIcon className="w-7 h-7 text-yellow-400"/>} title="Cosmic Insights">
-                    <p className="text-yellow-200/90 text-left mb-6">{insights.summary}</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-                        <div>
-                            <h4 className="font-semibold text-yellow-100 mb-2">Key Strengths</h4>
-                            <ul className="space-y-2">
+                <InfoCard icon={<CosmicInsightIcon className="w-6 h-6 text-amber-400"/>} title="Cosmic Guidance">
+                    <p className="text-neutral-300 text-left mb-8 leading-relaxed text-lg border-l-2 border-amber-500/30 pl-4">
+                        "{insights.summary}"
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                        <div className="bg-[#111] p-5 rounded-xl border border-white/5">
+                            <h4 className="font-bold text-white mb-4 flex items-center">
+                                <span className="text-green-500 mr-2">✦</span> Key Strengths
+                            </h4>
+                            <ul className="space-y-3">
                                 {insights.strengths.map(strength => (
                                     <li key={strength} className="flex items-start">
-                                        <CheckIcon className="w-5 h-5 text-green-400 mt-0.5 mr-2 flex-shrink-0" />
-                                        <span className="text-yellow-200/80">{strength}</span>
+                                        <CheckIcon className="w-5 h-5 text-green-500/70 mt-0.5 mr-2 flex-shrink-0" />
+                                        <span className="text-neutral-400 text-sm">{strength}</span>
                                     </li>
                                 ))}
                             </ul>
                         </div>
-                         <div>
-                            <h4 className="font-semibold text-yellow-100 mb-2">Potential Challenges</h4>
-                            <ul className="space-y-2">
+                         <div className="bg-[#111] p-5 rounded-xl border border-white/5">
+                            <h4 className="font-bold text-white mb-4 flex items-center">
+                                <span className="text-orange-500 mr-2">✦</span> Challenges
+                            </h4>
+                            <ul className="space-y-3">
                                 {insights.challenges.map(challenge => (
                                     <li key={challenge} className="flex items-start">
-                                        <WarnIcon className="w-5 h-5 text-orange-400 mt-0.5 mr-2 flex-shrink-0" />
-                                        <span className="text-yellow-200/80">{challenge}</span>
+                                        <WarnIcon className="w-5 h-5 text-orange-500/70 mt-0.5 mr-2 flex-shrink-0" />
+                                        <span className="text-neutral-400 text-sm">{challenge}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -153,40 +168,36 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ rashi, insi
                 </InfoCard>
             </div>
 
-            <div className="flex items-center space-x-4 mt-2 opacity-0 animate-fade-in animate-fade-in-delay-2">
+            <div className="flex items-center space-x-6 mt-6 opacity-0 animate-fade-in animate-fade-in-delay-2 pb-10">
                  <button
                     onClick={onReset}
-                    className="py-2 px-6 bg-yellow-600/80 hover:bg-yellow-700 text-black rounded-md font-semibold transition-all duration-300 shadow-lg transform hover:scale-105"
+                    className="py-3 px-8 border border-neutral-700 hover:border-amber-500/50 text-neutral-400 hover:text-white rounded-lg font-medium transition-all duration-300 uppercase tracking-wider text-xs"
                 >
                     Calculate Again
                 </button>
                 <button
                     onClick={handleShare}
                     disabled={copyStatus !== 'idle'}
-                    className={`flex items-center justify-center py-2 px-6 rounded-md font-semibold transition-all duration-300 shadow-lg w-40 text-center
-                        ${copyStatus === 'copied' ? 'bg-green-500/20 text-green-300 border border-green-500/30 cursor-default' : ''}
-                        ${copyStatus === 'error' ? 'bg-red-500/20 text-red-300 border border-red-500/30 cursor-default' : ''}
-                        ${copyStatus === 'idle' ? 'bg-transparent border border-yellow-500/50 hover:bg-yellow-500/20 text-yellow-300 transform hover:scale-105' : ''}
+                    className={`flex items-center justify-center py-3 px-8 rounded-lg font-bold transition-all duration-300 shadow-xl min-w-[180px] text-sm tracking-wide
+                        ${copyStatus === 'copied' ? 'bg-green-900/30 text-green-400 border border-green-500/50' : ''}
+                        ${copyStatus === 'error' ? 'bg-red-900/30 text-red-400 border border-red-500/50' : ''}
+                        ${copyStatus === 'idle' ? 'bg-amber-500 hover:bg-amber-400 text-black shadow-amber-500/20' : ''}
                     `}
-                    aria-label="Share your results"
                 >
                     {copyStatus === 'idle' && (
                         <>
-                            <ShareIcon className="w-5 h-5 mr-2" />
-                            <span>Share Results</span>
+                            <ShareIcon className="w-4 h-4 mr-2" />
+                            <span>SHARE RESULT</span>
                         </>
                     )}
                     {copyStatus === 'copied' && (
                         <>
-                            <CheckIcon className="w-5 h-5 mr-2" />
-                            <span>Copied!</span>
+                            <CheckIcon className="w-4 h-4 mr-2" />
+                            <span>COPIED</span>
                         </>
                     )}
                     {copyStatus === 'error' && (
-                        <>
-                            <WarnIcon className="w-5 h-5 mr-2" />
-                            <span>Failed</span>
-                        </>
+                        <span>FAILED</span>
                     )}
                 </button>
             </div>
