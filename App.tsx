@@ -97,7 +97,7 @@ const App: React.FC = () => {
 
                 <footer className="mt-12 text-sm text-yellow-400/50 flex flex-col items-center gap-1">
                     <p>&copy; {new Date().getFullYear()} Nexsoul Astro. For spiritual guidance only.</p>
-                    <p className="text-xs opacity-50">v1.5.1</p>
+                    <p className="text-xs opacity-50">v1.6.0</p>
                 </footer>
             </main>
             <style>{`
